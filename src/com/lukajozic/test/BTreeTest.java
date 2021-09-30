@@ -1,6 +1,8 @@
-package com.lukajozic;
+package com.lukajozic.test;
 
-import com.lukajozic.strategy.Order;
+import com.lukajozic.main.BTree;
+import com.lukajozic.main.Student;
+import com.lukajozic.main.strategy.Order;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;

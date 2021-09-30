@@ -1,7 +1,7 @@
-package com.lukajozic.strategy;
+package com.lukajozic.main.strategy;
 
-import com.lukajozic.Strategy;
-import com.lukajozic.Student;
+import com.lukajozic.main.Strategy;
+import com.lukajozic.main.Student;
 
 import java.util.Comparator;
 

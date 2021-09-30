@@ -1,5 +1,6 @@
-package com.lukajozic;
+package com.lukajozic.test;
 
+import com.lukajozic.main.Student;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,10 +14,10 @@ class StudentTest {
     }
 
     @Test
-    void compareTo() {
+    void testCompareTo() {
         Student otherStudent = new Student("Roger", "002", 3.0);
-        assertEquals(testStudent.compareTo(otherStudent), -1);
-        assertEquals(otherStudent.compareTo(testStudent), 1);
+        assertTrue(testStudent.compareTo(otherStudent) < 0);
+        assertTrue(otherStudent.compareTo(testStudent) > 0);
         otherStudent.setName("Adam");
         assertEquals(testStudent.compareTo(otherStudent), 0);
     }
@@ -24,8 +25,8 @@ class StudentTest {
     @Test
     void testEquals() {
         Student sameStudent = new Student("Adam", "001", 4.0);
-        assertTrue(testStudent.equals(sameStudent));
+        assertEquals(sameStudent, testStudent);
         Student notSameStudent = new Student("Roger", "002", 3.0);
-        assertFalse(testStudent.equals(notSameStudent));
+        assertNotEquals(notSameStudent, testStudent);
     }
 }

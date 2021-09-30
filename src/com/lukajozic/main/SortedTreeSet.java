@@ -1,4 +1,4 @@
-package com.lukajozic;
+package com.lukajozic.main;
 
 import java.util.SortedSet;
 
