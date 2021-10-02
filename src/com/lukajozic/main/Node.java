@@ -3,23 +3,23 @@ package com.lukajozic.main;
 import java.util.function.Consumer;
 
 public interface Node<E extends Comparable<E>> {
-    void addNonFull(E element, Node<E> parentNode);
+    void addNonFull(E element);
 
     void splitChild(int childIndex, Node<E> newChild);
 
     void reversedTraversal(Consumer<? super E> action);
 
-    StringBuilder toString(StringBuilder stringBuilder);
+    E getKey(int index);
 
-    Node<E>[] getChildren();
+    void setKey(int index, E element);
 
-    void setChildren(int index, Node<E> node);
+    Node<E> getChild(int index);
+
+    void setChild(int index, Node<E> node);
 
     int getNumNodes();
 
     void setNumNodes(int numNodes);
-
-    E[] getKeys();
 
     boolean isLeaf();
 }

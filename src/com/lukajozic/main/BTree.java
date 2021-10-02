@@ -3,10 +3,8 @@ package com.lukajozic.main;
 import java.util.*;
 import java.util.function.Consumer;
 
-// Where to implement NullObject pattern
-
 /**
- * Generic B-Tree Class
+ * Generic B-Tree Class using design patterns Iterator, Strategy, and Null Object.
  * CS-635
  *
  * @author Luka Jozic
@@ -46,23 +44,19 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
             if (root.getNumNodes() == this.order) {
                 Node<T> parentNode = new InnerNode<>(this.order, false, 0, this::compare);
                 this.root = parentNode;
-                parentNode.setChildren(0, root);
-
+                parentNode.setChild(0, root);
                 parentNode.splitChild(1, root);
-                parentNode.addNonFull(element, parentNode);
+                parentNode.addNonFull(element);
             } else {
-                root.addNonFull(element, root);
+                root.addNonFull(element);
             }
             size++;
-            System.out.println("ADDED " + element.toString());
             return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
     }
-
-
 
     /**
      * Return the element at the given index in the BTree
@@ -72,7 +66,7 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
      */
     public T get(int index) {
         int counter = 0;
-        for(T element : this) {
+        for (T element : this) {
             if (counter == index) {
                 return element;
             }
@@ -86,7 +80,7 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
      */
     @Override
     public boolean contains(Object object) {
-        T element = (T)object;
+        T element = (T) object;
         for (T elem : this) {
             if (element.equals(elem)) {
                 return true;
@@ -110,7 +104,32 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
      */
     @Override
     public void forEach(Consumer<? super T> action) {
-        root.reversedTraversal(action);
+        this.root.reversedTraversal(action);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        if(size == 0) {
+            return "[]";
+        }
+        return "[ " + this.root.toString() + "]";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object[] toArray() {
+        Iterator<T> iterator = iterator();
+        ArrayList<Object> elements = new ArrayList<>();
+        while (iterator.hasNext()) {
+            elements.add(iterator.next());
+        }
+        return elements.toArray();
     }
 
     /**
@@ -124,8 +143,8 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
      * {@inheritDoc}
      */
     final int compare(Object k1, Object k2) {
-        return comparator == null ? ((Comparable<? super T>)k1).compareTo((T)k2)
-                : comparator.compare((T)k1, (T)k2);
+        return comparator == null ? ((Comparable<? super T>) k1).compareTo((T) k2)
+                : comparator.compare((T) k1, (T) k2);
     }
 
     /**
@@ -147,47 +166,6 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
     /**
      * {@inheritDoc}
      */
-//    @Override
-//    public String toString() {
-////        if (size == 0) {
-////            return "[]";
-////        } else {
-////            Iterator<T> iterator = this.iterator();
-////            StringBuilder stringResult = new StringBuilder();
-////            stringResult.append("[").append(iterator.next());
-////            while(iterator.hasNext()) {
-////                stringResult.append(", ").append(iterator.next());
-////            }
-////            stringResult.append("]");
-////            return stringResult.toString();
-////        }
-//        return this.root.toString();
-////        return this.root.getString(new StringBuilder()).toString();
-//    }
-
-    @Override
-    public String toString() {
-        return this.root.toString(new StringBuilder()).toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object[] toArray() {
-        Iterator<T> iterator = iterator();
-        ArrayList<Object> elements = new ArrayList<>();
-        while (iterator.hasNext()) {
-            elements.add(iterator.next());
-        }
-        return elements.toArray();
-    }
-
-
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void clear() {
         this.root = new InnerNode<>(this.order, true, 0, this::compare);
@@ -203,8 +181,6 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
     public boolean remove(Object o) {
         return false;
     }
-
-
 
     @Override
     public boolean containsAll(Collection<?> c) {
@@ -251,125 +227,17 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
         return null;
     }
 
-//    private class NullNode<E extends Comparable<E>> extends InnerNode<E> {
-//
-//        public NullNode(boolean isLeaf, int numNodes) {
-//            super(isLeaf, numNodes);
-//        }
-//    }
-//
-//    private class BTreeNode<E extends Comparable<E>> extends InnerNode<E> {
-//        public BTreeNode(boolean isLeaf, int numNodes) {
-//            super(isLeaf, numNodes);
-//        }
-//    }
-//
-//    private class InnerNode<E extends Comparable<E>> implements Node<E> {
-//        private int numNodes;
-//        private final E[] keys;
-//        private final InnerNode<E>[] children;
-//        private final boolean isLeaf;
-//
-//        public InnerNode(boolean isLeaf, int numNodes) {
-//            this.keys = (E[]) new Comparable[2 * order - 1];
-//            this.children = new InnerNode[2 * order];
-//            this.isLeaf = isLeaf;
-//            this.numNodes = numNodes;
-//        }
-//
-//        /**
-//         * Reversed recursive in-order traversal on this node. Performs the given action for each element
-//         * until all elements have been processed or the action throws an exception.
-//         *
-//         * @param action to be performed on each element
-//         */
-//        @Override
-//        public void reversedTraversal(Consumer<? super E> action) {
-//            int i = this.numNodes;
-//            while(i > 0) {
-//                if (!this.isLeaf) {
-//                    this.children[i].reversedTraversal(action);
-//                }
-//                action.accept(this.keys[i - 1]);
-//                i--;
-//            }
-//            if (!this.isLeaf) {
-//                this.children[i].reversedTraversal(action);
-//            }
-//        }
-//
-//        /**
-//         * Add a new key in the subtree rooted with the current Node.
-//         *
-//         * @param element the student to be inserted
-//         * @param parentNode
-//         */
-//        public void addNonFull(E element, InnerNode<E> parentNode) {
-//            int i = this.numNodes;
-//            if (this.isLeaf) {
-//                while (i >= 1 && compare(element, this.keys[i - 1]) < 0) {
-//                    this.keys[i] = this.keys[i - 1];
-//                    i--;
-//                }
-//                this.keys[i] = element;
-//                this.numNodes++;
-//            } else {
-//                while (i >= 1 && compare(element, this.keys[i - 1]) < 0) {
-//                    i--;
-//                }
-//                i++;
-//                if (this.children[i - 1].numNodes == BTree.this.order) {
-//                    this.splitChild(i, this.children[i - 1]);
-//                    if (element.compareTo(this.keys[i - 1]) > 0) {
-//                        i++;
-//                    }
-//                }
-//                this.children[i - 1].addNonFull(element, this.children[i - 1]);
-//            }
-//        }
-//
-//
-//        /**
-//         * Split a child Node
-//         *
-//         * @param childIndex the index of the element
-//         * @param newChild   the new child causing the split
-//         */
-//        void splitChild(int childIndex, InnerNode<E> newChild) {
-//            InnerNode<E> childNode = new InnerNode<>(newChild.isLeaf, 1);
-//            childNode.keys[0] = newChild.keys[2];
-//
-//            if (!newChild.isLeaf) {
-//                childNode.children[1] = newChild.children[3];
-//                childNode.children[0] = newChild.children[2];
-//            }
-//            newChild.numNodes = 1;
-//
-//            for (int i = this.numNodes + 1; i >= childIndex + 1; i--) {
-//                this.children[i] = this.children[i - 1];
-//                this.keys[i - 1] = this.keys[i - 2];
-//            }
-//            this.children[childIndex] = childNode;
-//            this.keys[childIndex - 1] = newChild.keys[1];
-//            this.numNodes++;
-//        }
-//
-//        public InnerNode<E>[] getChildren() {
-//            return children;
-//        }
-//    }
-
     /**
      * Iterator object for the BTree parent class which implements the Iterator design
      * pattern using in-order traversal. This class allows clients to iterate over
      * all elements in the BTree.
      */
-    private final class BTreeIterator<C extends Comparable<C>> implements Iterator<C> {
+    private static final class BTreeIterator<C extends Comparable<C>> implements Iterator<C> {
         private final Stack<Node<C>> nodeStack;
         private final Stack<Integer> indexStack;
 
         public BTreeIterator(Node<C> root) {
-            nodeStack  = new Stack<>();
+            nodeStack = new Stack<>();
             indexStack = new Stack<>();
             if (root.getNumNodes() > 0) {
                 pushLeft(root);
@@ -396,7 +264,7 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
             }
             Node<C> nextNode = nodeStack.peek();
             int index = indexStack.pop();
-            C nextElement = nextNode.getKeys()[index];
+            C nextElement = nextNode.getKey(index);
             index++;
             if (index < nextNode.getNumNodes()) {
                 indexStack.push(index);
@@ -404,13 +272,13 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
                 nodeStack.pop();
             }
             if (!nextNode.isLeaf()) {
-                pushLeft(nextNode.getChildren()[index]);
+                pushLeft(nextNode.getChild(index));
             }
             return nextElement;
         }
 
         /**
-         * Pushes the given element to the left child
+         * Push the given element to the left child
          *
          * @param node to be pushed to the nodeStack
          */
@@ -421,7 +289,7 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
                 if (node.isLeaf()) {
                     break;
                 }
-                node = node.getChildren()[0];
+                node = node.getChild(0);
             }
         }
     }

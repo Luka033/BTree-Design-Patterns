@@ -33,5 +33,19 @@ public class Order {
             return Comparator.comparing(Student::getGpa);
         }
     }
+
+    public static class RedIdDecreasing implements Strategy {
+        @Override
+        public Comparator<Student> getOrder() {
+            return Comparator.comparing(Student::getRedId).reversed();
+        }
+    }
+
+    public static class RedIdIncreasing implements Strategy {
+        @Override
+        public Comparator<Student> getOrder() {
+            return Comparator.comparing(Student::getRedId);
+        }
+    }
 }
 

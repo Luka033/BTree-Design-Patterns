@@ -13,7 +13,7 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
 
     public InnerNode(int order, boolean isLeaf, int numNodes, Comparator<? super E> comparator) {
         this.keys = (E[]) new Comparable[2 * order - 1];
-        this.children = new Node[2 * order];
+        this.children =  new Node[2 * order];
         this.isLeaf = isLeaf;
         this.numNodes = numNodes;
         this.comparator = comparator;
@@ -21,9 +21,12 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
         initChildren();
     }
 
+    /**
+     * Helper function to initialize all the children as NullNodes
+     */
     private void initChildren() {
         for(int i = 0; i < this.children.length - 1; i++) {
-            this.children[i] = new NullNode<>(this.order, true, 0, this::compare);
+            this.children[i] = new NullNode<>(order, true, 0, this::compare);
         }
     }
 
@@ -31,10 +34,9 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
      * Add a new key in the subtree rooted with the current Node.
      *
      * @param element the student to be inserted
-     * @param parentNode
      */
     @Override
-    public void addNonFull(E element, Node<E> parentNode) {
+    public void addNonFull(E element) {
         int i = this.numNodes;
         if (this.isLeaf) {
             while (i >= 1 && compare(element, this.keys[i - 1]) < 0) {
@@ -48,13 +50,13 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
                 i--;
             }
             i++;
-            if (this.children[i - 1].getNumNodes() == this.order) {
+            if (this.children[i - 1].getNumNodes() == order) {
                 this.splitChild(i, this.children[i - 1]);
                 if (element.compareTo(this.keys[i - 1]) > 0) {
                     i++;
                 }
             }
-            this.children[i - 1].addNonFull(element, this.children[i - 1]);
+            this.children[i - 1].addNonFull(element);
         }
     }
 
@@ -67,10 +69,10 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
     @Override
     public void splitChild(int childIndex, Node<E> newChild) {
         Node<E> childNode = new InnerNode<E>(order, newChild.isLeaf(), 1, this::compare);
-        childNode.getKeys()[0] = newChild.getKeys()[2];
+        childNode.setKey(0, newChild.getKey(2));
 
-        childNode.getChildren()[1] = newChild.getChildren()[3];
-        childNode.getChildren()[0] = newChild.getChildren()[2];
+        childNode.setChild(1, newChild.getChild(3));
+        childNode.setChild(0, newChild.getChild(2));
         newChild.setNumNodes(1);
 
         for (int i = this.numNodes + 1; i >= childIndex + 1; i--) {
@@ -78,7 +80,7 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
             this.keys[i - 1] = this.keys[i - 2];
         }
         this.children[childIndex] = childNode;
-        this.keys[childIndex - 1] = newChild.getKeys()[1];
+        this.keys[childIndex - 1] = newChild.getKey(1);
         this.numNodes++;
     }
 
@@ -99,33 +101,18 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
         this.children[i].reversedTraversal(action);
     }
 
-    //    @Override
-//    public String toString() {
-//        StringBuilder stringBuilder = new StringBuilder();
-//        for(Node<E> child : this.getChildren()) {
-//            stringBuilder.append(child.toString() + keys[0]);
-//        }
-//        return stringBuilder.toString(); // + children[1].toString() + keys[1].toString() + children[2].toString();
-//        return children[0].toString() + keys[0] + children[1].toString();// + keys[1].toString() + children[2].toString();
-//        int i = 0;
-//        while(i < this.numNodes) {
-//            this.children[i].toString();
-//            return this.keys[i].toString();
-//            i++;
-//        }
-//        return this.children[i].toString();
-//    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public StringBuilder toString(StringBuilder stringBuilder) {
+    public String toString() {
+        StringBuilder str = new StringBuilder();
         int i = 0;
         while(i < this.numNodes) {
-            this.children[i].toString(stringBuilder);
-            stringBuilder.append(this.keys[i].toString()).append(" ");
+            str.append(children[i].toString()).append(this.keys[i]).append(" ");
             i++;
         }
-        this.children[i].toString(stringBuilder);
-        return stringBuilder;
+        return str + this.children[i].toString();
     }
 
     /**
@@ -136,12 +123,23 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
                 : comparator.compare((E)k1, (E)k2);
     }
 
-    public Node<E>[] getChildren() {
-        return children;
+    @Override
+    public E getKey(int index) {
+        return this.keys[index];
     }
 
     @Override
-    public void setChildren(int index, Node<E> node) {
+    public void setKey(int index, E element) {
+        this.keys[index] = element;
+    }
+
+    @Override
+    public Node<E> getChild(int index) {
+        return children[index];
+    }
+
+    @Override
+    public void setChild(int index, Node<E> node) {
         this.children[index] = node;
     }
 
@@ -152,10 +150,6 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
     @Override
     public void setNumNodes(int numNodes) {
         this.numNodes = numNodes;
-    }
-
-    public E[] getKeys() {
-        return keys;
     }
 
     public boolean isLeaf() {

@@ -32,7 +32,7 @@ class BTreeTest<T extends Comparable<T>> {
     }
 
     @Test
-    void add() {
+    void testAdd() {
         BTree<Student> testTree = new BTree<>(3, new Order.AlphaIncreasing().getOrder());
         assertEquals(testTree.size(), 0);
         Student addedStudent = new Student("Thomas", "011", 3.5);
@@ -45,7 +45,7 @@ class BTreeTest<T extends Comparable<T>> {
     }
 
     @Test
-    void get() {
+    void testGet() {
         BTree<Student> testTree = new BTree<>(3, new Order.AlphaIncreasing().getOrder());
         testTree = populateTestTree(testTree);
         Student ithElement = testTree.get(1);
@@ -55,7 +55,16 @@ class BTreeTest<T extends Comparable<T>> {
     }
 
     @Test
-    void iterator() {
+    void testContains() {
+        BTree<Student> testTree = new BTree<>(3, new Order.AlphaIncreasing().getOrder());
+        assertFalse(testTree.contains(new Student("Bertil", "002", 3.6)));
+        testTree = populateTestTree(testTree);
+        assertTrue(testTree.contains(new Student("Bertil", "002", 3.6)));
+        assertTrue(testTree.contains(new Student("Niklas", "009", 2.4)));
+    }
+
+    @Test
+    void testIterator() {
         BTree<Student> testTree = new BTree<>(3, new Order.AlphaIncreasing().getOrder());
         Iterator<Student> testIterator = testTree.iterator();
         assertFalse(testIterator.hasNext());
@@ -70,11 +79,7 @@ class BTreeTest<T extends Comparable<T>> {
     }
 
     @Test
-    void forEach() {
-    }
-
-    @Test
-    void size() {
+    void testSize() {
         BTree<Student> testTree = new BTree<>(3, new Order.AlphaIncreasing().getOrder());
         assertEquals(testTree.size(), 0);
         testTree.add(new Student("Jack", "012", 3.5));
@@ -84,7 +89,7 @@ class BTreeTest<T extends Comparable<T>> {
     }
 
     @Test
-    void isEmpty() {
+    void testIsEmpty() {
         BTree<Student> testTree = new BTree<>(3, new Order.AlphaIncreasing().getOrder());
         assertTrue(testTree.isEmpty());
         testTree.add(new Student("Thomas", "011", 3.5));
@@ -96,10 +101,9 @@ class BTreeTest<T extends Comparable<T>> {
         BTree<Student> testTree = new BTree<>(3, new Order.AlphaIncreasing().getOrder());
         assertEquals(testTree.toString(), "[]");
         testTree = populateTestTree(testTree);
-        assertEquals(testTree.toString(), "[Student{name='Adam', redId='001', gpa=4.0}, Student{name='Bertil', redId='002', gpa=3.6}, Student{name='Charlie', redId='003', gpa=3.5}, Student{name='David', redId='004', gpa=3.4}, Student{name='Erik', redId='005', gpa=3.1}, Student{name='Jonas', redId='006', gpa=3.0}, Student{name='Luka', redId='007', gpa=2.85}, Student{name='Martin', redId='008', gpa=2.5}, Student{name='Niklas', redId='009', gpa=2.4}, Student{name='Roger', redId='010', gpa=1.0}]");
+        assertEquals(testTree.toString(), "[ Student{name='Adam', redId='001', gpa=4.0} Student{name='Bertil', redId='002', gpa=3.6} Student{name='Charlie', redId='003', gpa=3.5} Student{name='David', redId='004', gpa=3.4} Student{name='Erik', redId='005', gpa=3.1} Student{name='Jonas', redId='006', gpa=3.0} Student{name='Luka', redId='007', gpa=2.85} Student{name='Martin', redId='008', gpa=2.5} Student{name='Niklas', redId='009', gpa=2.4} Student{name='Roger', redId='010', gpa=1.0} ]");
         testTree = new BTree<>(3, new Order.GpaDecreasing().getOrder());
         testTree = populateTestTree(testTree);
-        assertEquals(testTree.toString(), "[Student{name='Adam', redId='001', gpa=4.0}, Student{name='Bertil', redId='002', gpa=3.6}, Student{name='Charlie', redId='003', gpa=3.5}, Student{name='David', redId='004', gpa=3.4}, Student{name='Erik', redId='005', gpa=3.1}, Student{name='Jonas', redId='006', gpa=3.0}, Student{name='Luka', redId='007', gpa=2.85}, Student{name='Martin', redId='008', gpa=2.5}, Student{name='Niklas', redId='009', gpa=2.4}, Student{name='Roger', redId='010', gpa=1.0}]");
+        assertEquals(testTree.toString(), "[ Student{name='Adam', redId='001', gpa=4.0} Student{name='Bertil', redId='002', gpa=3.6} Student{name='Charlie', redId='003', gpa=3.5} Student{name='David', redId='004', gpa=3.4} Student{name='Erik', redId='005', gpa=3.1} Student{name='Jonas', redId='006', gpa=3.0} Student{name='Luka', redId='007', gpa=2.85} Student{name='Martin', redId='008', gpa=2.5} Student{name='Niklas', redId='009', gpa=2.4} Student{name='Roger', redId='010', gpa=1.0} ]");
     }
-
 }

@@ -20,55 +20,43 @@ public class NullNode<E extends Comparable<E>> implements Node<E> {
         this.order = order;
     }
 
-    /**
-     * Add a new key in the subtree rooted with the current Node.
-     *
-     * @param element the student to be inserted
-     * @param parentNode
-     */
     @Override
-    public void addNonFull(E element, Node<E> parentNode) {
+    public void addNonFull(E element) {
         // do nothing
     }
 
-    /**
-     * Split a child Node
-     *
-     * @param childIndex the index of the element
-     * @param newChild   the new child causing the split
-     */
     @Override
     public void splitChild(int childIndex, Node<E> newChild) {
         // do nothing
     }
 
-    /**
-     * Reversed recursive in-order traversal on this node. Performs the given action for each element
-     * until all elements have been processed or the action throws an exception.
-     *
-     * @param action to be performed on each element
-     */
     @Override
     public void reversedTraversal(Consumer<? super E> action) {
         // do nothing
     }
 
     @Override
-    public StringBuilder toString(StringBuilder stringBuilder) {
-        return stringBuilder;
-    }
-
-//    @Override
-//    public String toString() {
-//        return "";
-//    }
-
-    public Node<E>[] getChildren() {
-        return children;
+    public String toString() {
+        return "";
     }
 
     @Override
-    public void setChildren(int index, Node<E> node) {
+    public E getKey(int index) {
+        return this.keys[index];
+    }
+
+    @Override
+    public void setKey(int index, E element) {
+        this.keys[index] = element;
+    }
+
+    @Override
+    public Node<E> getChild(int index) {
+        return children[index];
+    }
+
+    @Override
+    public void setChild(int index, Node<E> node) {
         this.children[index] = node;
     }
 
@@ -79,10 +67,6 @@ public class NullNode<E extends Comparable<E>> implements Node<E> {
     @Override
     public void setNumNodes(int numNodes) {
         this.numNodes = numNodes;
-    }
-
-    public E[] getKeys() {
-        return keys;
     }
 
     public boolean isLeaf() {

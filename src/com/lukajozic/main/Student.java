@@ -74,36 +74,6 @@ public class Student implements Comparable<Student> {
     public int hashCode() {
         return Objects.hash(name, redId, gpa);
     }
-
-//    public int getComparator(Strategy strategy, Student o1, Student o2) {
-//        return strategy.compareTo()
-//    }
-
-//    protected static class OrderByAlpha implements Strategy {
-//        @Override
-//        public int compareTo(Student currentStudent, Student otherStudent) {
-//            if(currentStudent.getName().compareTo(otherStudent.getName()) > 0) {
-//                return 1;
-//            } else if(currentStudent.getName().compareTo(otherStudent.getName()) < 0) {
-//                return -1;
-//            } else {
-//                return 0;
-//            }
-//        }
-//    }
-//
-//    protected static class OrderByGpa implements Strategy {
-//        @Override
-//        public int compareTo(Student currentStudent, Student otherStudent) {
-//            if(currentStudent.getGpa() > otherStudent.getGpa()) {
-//                return 1;
-//            } else if(currentStudent.getGpa() < otherStudent.getGpa()) {
-//                return -1;
-//            } else {
-//                return 0;
-//            }
-//        }
-//    }
 }
 
 
