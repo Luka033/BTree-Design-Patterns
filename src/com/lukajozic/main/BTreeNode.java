@@ -3,7 +3,7 @@ package com.lukajozic.main;
 import java.util.Comparator;
 import java.util.function.Consumer;
 
-public class InnerNode<E extends Comparable<E>> implements Node<E> {
+public class BTreeNode<E extends Comparable<E>> implements Node<E> {
     private int numNodes;
     private final E[] keys;
     private final Node<E>[] children;
@@ -11,7 +11,7 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
     private final Comparator<? super E> comparator;
     private final int order;
 
-    public InnerNode(int order, boolean isLeaf, int numNodes, Comparator<? super E> comparator) {
+    public BTreeNode(int order, boolean isLeaf, int numNodes, Comparator<? super E> comparator) {
         this.keys = (E[]) new Comparable[2 * order - 1];
         this.children =  new Node[2 * order];
         this.isLeaf = isLeaf;
@@ -26,7 +26,7 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
      */
     private void initChildren() {
         for(int i = 0; i < this.children.length - 1; i++) {
-            this.children[i] = new NullNode<>(order, true, 0, this::compare);
+            this.children[i] = new NullNode<>(this.order, true, 0, this::compare);
         }
     }
 
@@ -50,7 +50,7 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
                 i--;
             }
             i++;
-            if (this.children[i - 1].getNumNodes() == order) {
+            if (this.children[i - 1].getNumNodes() == this.order) {
                 this.splitChild(i, this.children[i - 1]);
                 if (element.compareTo(this.keys[i - 1]) > 0) {
                     i++;
@@ -68,7 +68,7 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
      */
     @Override
     public void splitChild(int childIndex, Node<E> newChild) {
-        Node<E> childNode = new InnerNode<E>(order, newChild.isLeaf(), 1, this::compare);
+        Node<E> childNode = new BTreeNode<E>(this.order, newChild.isLeaf(), 1, this::compare);
         childNode.setKey(0, newChild.getKey(2));
 
         childNode.setChild(1, newChild.getChild(3));
@@ -109,7 +109,7 @@ public class InnerNode<E extends Comparable<E>> implements Node<E> {
         StringBuilder str = new StringBuilder();
         int i = 0;
         while(i < this.numNodes) {
-            str.append(children[i].toString()).append(this.keys[i]).append(" ");
+            str.append(this.children[i].toString()).append(this.keys[i]).append(" ");
             i++;
         }
         return str + this.children[i].toString();

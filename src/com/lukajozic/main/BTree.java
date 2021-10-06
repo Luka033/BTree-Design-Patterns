@@ -27,7 +27,7 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
 
     public BTree(int order, Comparator<? super T> comparator) {
         this.order = order;
-        this.root = new InnerNode<>(this.order, true, 0, this::compare);
+        this.root = new BTreeNode<>(this.order, true, 0, this::compare);
         this.comparator = comparator;
     }
 
@@ -42,7 +42,7 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
         try {
             Node<T> root = this.root;
             if (root.getNumNodes() == this.order) {
-                Node<T> parentNode = new InnerNode<>(this.order, false, 0, this::compare);
+                Node<T> parentNode = new BTreeNode<>(this.order, false, 0, this::compare);
                 this.root = parentNode;
                 parentNode.setChild(0, root);
                 parentNode.splitChild(1, root);
@@ -50,7 +50,7 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
             } else {
                 root.addNonFull(element);
             }
-            size++;
+            this.size++;
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -113,9 +113,9 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
      */
     @Override
     public String toString() {
-        if(size == 0) {
-            return "[]";
-        }
+//        if(this.size == 0) {
+//            return "[]";
+//        }
         return "[ " + this.root.toString() + "]";
     }
 
@@ -168,7 +168,7 @@ public class BTree<T extends Comparable<T>> implements SortedTreeSet<T> {
      */
     @Override
     public void clear() {
-        this.root = new InnerNode<>(this.order, true, 0, this::compare);
+        this.root = new BTreeNode<>(this.order, true, 0, this::compare);
         this.size = 0;
     }
 

@@ -99,7 +99,7 @@ class BTreeTest<T extends Comparable<T>> {
     @Test
     void testToString() {
         BTree<Student> testTree = new BTree<>(3, new Order.AlphaIncreasing().getOrder());
-        assertEquals(testTree.toString(), "[]");
+        assertEquals(testTree.toString(), "[ ]");
         testTree = populateTestTree(testTree);
         assertEquals(testTree.toString(), "[ Student{name='Adam', redId='001', gpa=4.0} Student{name='Bertil', redId='002', gpa=3.6} Student{name='Charlie', redId='003', gpa=3.5} Student{name='David', redId='004', gpa=3.4} Student{name='Erik', redId='005', gpa=3.1} Student{name='Jonas', redId='006', gpa=3.0} Student{name='Luka', redId='007', gpa=2.85} Student{name='Martin', redId='008', gpa=2.5} Student{name='Niklas', redId='009', gpa=2.4} Student{name='Roger', redId='010', gpa=1.0} ]");
         testTree = new BTree<>(3, new Order.GpaDecreasing().getOrder());
